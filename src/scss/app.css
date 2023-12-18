@@ -1,0 +1,6 @@
+Can't find stylesheet to import.
+  ╷
+1 │ @import 'variables';
+  │         ^^^^^^^^^^^
+  ╵
+  module.scss 1:9  root stylesheet

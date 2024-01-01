@@ -1,64 +1,56 @@
 import React from 'react';
+import classNames from 'classnames';
 
-function SortPopup ({items}) {
-  const [visiblePopup, setVisiblePopup] = React.useState(false);
-  const [activeItem, setActiveItem] = React.useState(0);
-  const sortRef = React.useRef();
-  const activeLabel = items[activeItem];
-
-  const toggleVisiblePopup = () => {
-    setVisiblePopup(!visiblePopup);
-  }
-
-  const handleOutsideClick = (event) => {
-    if (event.sortRef) {
-      setVisiblePopup(false);
-    }
-  }
-
-  const onSelectItem = (index) => {
-    setActiveItem(index);
-    setVisiblePopup(false);
-  }
+function PizzaBlock ({name, imageUrl, price, types, sizes}) {
+  const typeNames = ['tonkoe', 'standart'];
+  const availableSize = [26, 30, 40];
+  const [activeType, setActiveType] = React.useState(types[0]);
+  const [activeSize, setActiveSize] = React.useState(sizes[0]);
   
-  React.useEffect(() => {
-    document.body.addEventListener('click', handleOutsideClick);
-  }, [])
+  const onSelectType = (index) => {
+    setActiveType(index);
+  }
 
-  return(
-    <div className="sort" ref={sortRef}>
-      <div className="sort__label">
-        <svg className={visiblePopup ? 'rotated' : ''}
-                  width="10"
-                  height="6"
-                  viewBox="0 0 10 6"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 5C10 5.16927 9.93815 5.31576 9.81445 5.43945C9.69075 5.56315 9.54427 5.625 9.375 5.625H0.625C0.455729 5.625 0.309245 5.56315 0.185547 5.43945C0.061849 5.31576 0 5.16927 0 5C0 4.83073 0.061849 4.68424 0.185547 4.56055L4.56055 0.185547C4.68424 0.061849 4.83073 0 5 0C5.16927 0 5.31576 0.061849 5.43945 0.185547L9.81445 4.56055C9.93815 4.68424 10 4.83073 10 5Z"
-                    fill="#2C2C2C"
-                  />
-        </svg>
-        <b>Сортировка по:</b>
-        <span onClick={ toggleVisiblePopup }>{activeLabel}</span>
+  const onSelectSize = (index) => {
+    setActiveSize(index);
+  }
+
+  return (
+    <div className='pizzas-block'>
+      <img className="pizzas-block__image" src={imageUrl} alt='' />
+
+      <h4 className='pizzas-block__title'>{name}</h4>
+      <div className='pizzas-block__selector'>
+        <ul>
+          {
+            typeNames.map((type, index) => (
+              <li className={classNames({
+                active: activeType === index,
+                disabled: !types.includes(index)
+              })}
+                onClick={() => onSelectType(index)}
+                key={type}
+              >{type}</li>
+            ))
+          }
+        </ul>
+
+        <ul>
+          {
+            availableSize.map((size, index) => (
+              <li className={classNames({
+                active: activeSize === index,
+                disabled: !sizes.includes(size),
+              })}
+                onClick={() => onSelectSize(index)}
+                key={size}
+              >{size}</li>
+            ))
+          }
+        </ul>
       </div>
-      { visiblePopup &&
-        <div className="sort__popup">
-          <ul>
-            { items &&
-              items.map((name, index) =>  (
-                <li className={activeItem === index ? 'active' : ''}
-                  onClick={() => onSelectItem(index)}
-                  key={`${name}_${index}`}
-                >{name}</li>
-              ))
-            }
-          </ul>
-        </div>
-      }
     </div>
   )
 }
 
-export default SortPopup;
+export default PizzaBlock;
